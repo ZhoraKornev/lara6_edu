@@ -15,12 +15,16 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::resource('rest','RestTestController')->names('restTest');
+Auth::routes();
+//Blogs admin path
+$groupData = ['namespace'=>'Blog\Admin','prefix'=>'admin/blog'];
 
-Route::group(['namespace'=>'Blog','prefix'=>'Blog'],function (){
-    Route::resource('posts','PostController')->names('blog.posts');
+Route::group($groupData,function (){
+    //category admin category
+    $methods = ['index','edit','store','update','create'];
+    Route::resource('categories','CategoryController')->only($methods)->names('blog.admin.categories');
 });
 
-Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+//Route::resource('rest','RestTestController')->names('restTest');
