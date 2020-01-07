@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * App\Models\BlogCategory
@@ -30,5 +31,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class BlogCategory extends Model
 {
+    use SoftDeletes;
+
+    protected $fillable = ['title','parent_id','slug','description'];
     //
 }
