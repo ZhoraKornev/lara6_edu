@@ -1,16 +1,17 @@
 @php
     /** @var \App\Models\BlogCategory $item */
 @endphp
-@if ($item->exists)
-    <div class="row justify-content-center">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-body">
-                    <button type="submit" class="btn-primary btn">Сохранить</button>
-                </div>
+
+<div class="row justify-content-center">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <button type="submit" class="btn-primary btn">Сохранить</button>
             </div>
         </div>
     </div>
+</div>
+@if ($item->exists)
     <br>
     <div class="row justify-content-center">
         <div class="col-md-12">

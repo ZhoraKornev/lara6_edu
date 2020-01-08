@@ -33,7 +33,7 @@
                                    type="text"
                                    class="form-control"
                                    minlength="3"
-                                   required>
+                                   >
                         </div>
                         <div class="form-group">
                             <label for="parent_id">Родитель</label>
@@ -51,14 +51,10 @@
                         </div>
                         <div class="form-group">
                             <label for="slug">Описание</label>
-
                             <textarea name="description"
                                       id="description"
                                       class="form-control"
-                                      minlength="3"
-                            >
-                                {{old('description',$item->description)}}
-                            </textarea>
+                                      minlength="3">{{old('description',$item->description)}}</textarea>
                         </div>
 
 
