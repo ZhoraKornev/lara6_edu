@@ -17,14 +17,14 @@ Route::get('/', function () {
 
 Auth::routes();
 //Blogs admin path
-$groupData = ['namespace'=>'Blog\Admin','prefix'=>'admin/blog'];
+$groupData = ['namespace' => 'Blog\Admin', 'prefix' => 'admin/blog'];
 
-Route::group($groupData,function (){
+Route::group($groupData, function () {
     //category admin category
-    $methods = ['index','edit','store','update','create'];
-    Route::resource('categories','CategoryController')->only($methods)->names('blog.admin.categories');
+    $methods = ['index', 'edit', 'store', 'update', 'create'];
+    Route::resource('categories', 'CategoryController')->only($methods)->names('blog.admin.categories');
+    Route::resource('posts', 'PostController')->except(['show'])->names('blog.admin.posts');
 });
-
 
 Route::get('/home', 'HomeController@index')->name('home');
 //Route::resource('rest','RestTestController')->names('restTest');

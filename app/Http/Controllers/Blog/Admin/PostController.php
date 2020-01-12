@@ -5,17 +5,19 @@ namespace App\Http\Controllers\Blog\Admin;
 use App\Http\Requests\BlogCategoryCreateRequest;
 use App\Http\Requests\BlogCategoryUpdateRequest;
 use App\Models\BlogCategory;
-use App\Repositories\BlogCategoryRepository;
+use App\Models\BlogPost;
+use App\Repositories\BlogPostRepository;
 
-class CategoryController extends BaseAdminBlogController
+class PostController extends BaseAdminBlogController
 {
-    /** @var BlogCategoryRepository $blogCategoryRepository */
-    private $blogCategoryRepository;
+    /** @var BlogPostRepository $blogCategoryRepository */
+    private $blogPostRepository;
+    private static $limitPerPage = 25;
 
     public function __construct()
     {
         parent::__construct();
-        $this->blogCategoryRepository = app(BlogCategoryRepository::class);
+        $this->blogPostRepository = app(BlogPostRepository::class);
     }
 
     /**
@@ -25,10 +27,9 @@ class CategoryController extends BaseAdminBlogController
      */
     public function index()
     {
-        $items = $this->blogCategoryRepository->getAllWithPaginate(5);
+        $items = $this->blogPostRepository->getAllWithPaginate(self::$limitPerPage);
 
-
-        return view('blog.admin.categories.index', compact('items'));
+        return view('blog.admin.posts.index', compact('items'));
     }
 
     /**
@@ -38,7 +39,7 @@ class CategoryController extends BaseAdminBlogController
      */
     public function create()
     {
-        $item = new BlogCategory();
+        $item = new BlogPost();
         $categoryList = $this->blogCategoryRepository->getListForComboBox();
         return view('blog.admin.categories.edit', compact('item', 'categoryList'));
     }
@@ -73,7 +74,8 @@ class CategoryController extends BaseAdminBlogController
      */
     public function edit($id)
     {
-        $item = $this->blogCategoryRepository->getEdit($id);
+        dd(__METHOD__);
+        $item = $this->blogPostRepository->getEdit($id);
         abort_unless($item->exists(), 404);
         $categoryList = $this->blogCategoryRepository->getListForComboBox();
         return view('blog.admin.categories.edit', compact('item', 'categoryList'));
@@ -102,6 +104,11 @@ class CategoryController extends BaseAdminBlogController
         } else {
             return back()->withErrors(['msg' => "Ошибка сохранения"])->withInput();
         }
+    }
+
+    public function destroy()
+    {
+        dd(__METHOD__);
     }
 
 }
