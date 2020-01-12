@@ -2,14 +2,22 @@
 
 namespace App\Http\Controllers\Blog\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests\BlogCategoryCreateRequest;
 use App\Http\Requests\BlogCategoryUpdateRequest;
 use App\Models\BlogCategory;
-use Illuminate\Http\Request;
+use App\Repositories\BlogCategoryRepository;
 
 class CategoryController extends BaseAdminController
 {
+    /** @var BlogCategoryRepository $blogCategoryRepository */
+    private $blogCategoryRepository;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->blogCategoryRepository = app(BlogCategoryRepository::class);
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -17,7 +25,9 @@ class CategoryController extends BaseAdminController
      */
     public function index()
     {
-        $items = BlogCategory::paginate(5);
+        $items = $this->blogCategoryRepository->getAllWithPaginate(5);
+
+
         return view('blog.admin.categories.index', compact('items'));
     }
 
@@ -29,7 +39,7 @@ class CategoryController extends BaseAdminController
     public function create()
     {
         $item = new BlogCategory();
-        $categoryList = BlogCategory::all();
+        $categoryList = $this->blogCategoryRepository->getListForComboBox();
         return view('blog.admin.categories.edit', compact('item', 'categoryList'));
     }
 
@@ -42,7 +52,7 @@ class CategoryController extends BaseAdminController
     public function store(BlogCategoryCreateRequest $request)
     {
         $data = $request->input();
-        if(empty($data['slug'])){
+        if (empty($data['slug'])) {
             $data['slug'] = str_slug($data['title']);
         }
         $item = new BlogCategory($data);
@@ -58,12 +68,14 @@ class CategoryController extends BaseAdminController
      * Show the form for editing the specified resource.
      *
      * @param int $id
+     * @param BlogCategoryRepository $blogCategoryRepository
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
-        $item = BlogCategory::findOrFail($id);
-        $categoryList = BlogCategory::all();
+        $item = $this->blogCategoryRepository->getEdit($id);
+        abort_unless($item->exists(), 404);
+        $categoryList = $this->blogCategoryRepository->getListForComboBox();
         return view('blog.admin.categories.edit', compact('item', 'categoryList'));
     }
 
@@ -76,7 +88,7 @@ class CategoryController extends BaseAdminController
      */
     public function update(BlogCategoryUpdateRequest $request, $id)
     {
-        $item = BlogCategory::find($id);
+        $item = $this->blogCategoryRepository->getEdit($id);;
 
         // Update existed article
         if (empty($item)) {

@@ -8,5 +8,7 @@ use Illuminate\Http\Request;
 
 abstract class BaseAdminController extends GuestBaseController
 {
-    //
+    public function __construct()
+    {
+    }
 }
