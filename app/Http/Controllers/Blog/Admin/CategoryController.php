@@ -27,7 +27,6 @@ class CategoryController extends BaseAdminBlogController
     {
         $items = $this->blogCategoryRepository->getAllWithPaginate(5);
 
-
         return view('blog.admin.categories.index', compact('items'));
     }
 
@@ -55,8 +54,7 @@ class CategoryController extends BaseAdminBlogController
         if (empty($data['slug'])) {
             $data['slug'] = str_slug($data['title']);
         }
-        $item = new BlogCategory($data);
-        $item->save();
+        $item = BlogCategory::make($data);
         if ($item) {
             return redirect()->route('blog.admin.categories.edit', $item->id)->with(['success' => "Успешно сохранено"]);
         } else {

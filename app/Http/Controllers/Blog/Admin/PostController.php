@@ -4,20 +4,26 @@ namespace App\Http\Controllers\Blog\Admin;
 
 use App\Http\Requests\BlogCategoryCreateRequest;
 use App\Http\Requests\BlogCategoryUpdateRequest;
+use App\Http\Requests\BlogPostUpdateRequest;
 use App\Models\BlogCategory;
 use App\Models\BlogPost;
+use App\Repositories\BlogCategoryRepository;
 use App\Repositories\BlogPostRepository;
+use Carbon\Carbon;
 
 class PostController extends BaseAdminBlogController
 {
     /** @var BlogPostRepository $blogCategoryRepository */
     private $blogPostRepository;
+    /** @var BlogCategoryRepository $blogCategoryRepository */
+    private $blogCategoryRepository;
     private static $limitPerPage = 25;
 
     public function __construct()
     {
         parent::__construct();
         $this->blogPostRepository = app(BlogPostRepository::class);
+        $this->blogCategoryRepository = app(BlogCategoryRepository::class);
     }
 
     /**
@@ -74,11 +80,10 @@ class PostController extends BaseAdminBlogController
      */
     public function edit($id)
     {
-        dd(__METHOD__);
         $item = $this->blogPostRepository->getEdit($id);
         abort_unless($item->exists(), 404);
         $categoryList = $this->blogCategoryRepository->getListForComboBox();
-        return view('blog.admin.categories.edit', compact('item', 'categoryList'));
+        return view('blog.admin.posts.edit', compact('item', 'categoryList'));
     }
 
     /**
@@ -88,19 +93,19 @@ class PostController extends BaseAdminBlogController
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(BlogCategoryUpdateRequest $request, $id)
+    public function update(BlogPostUpdateRequest $request, $id)
     {
-        $item = $this->blogCategoryRepository->getEdit($id);;
+        $item = $this->blogPostRepository->getEdit($id);;
 
         // Update existed article
         if (empty($item)) {
             return back()->withErrors(['msg' => "Запись id = $id не найдена"])->withInput();
         }
         $data = $request->all();
-        $result = $item->fill($data)->save();
+        $result = $item->update($data);
 
         if ($result) {
-            return redirect()->route('blog.admin.categories.edit', $item->id)->with(['success' => "Успешно сохранено"]);
+            return redirect()->route('blog.admin.posts.edit', $item->id)->with(['success' => "Успешно сохранено"]);
         } else {
             return back()->withErrors(['msg' => "Ошибка сохранения"])->withInput();
         }
