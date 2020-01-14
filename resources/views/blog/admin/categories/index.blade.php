@@ -24,7 +24,7 @@
                                     <td>
                                         <a class="btn btn-primary" href="{{ route('blog.admin.categories.edit',$item->id) }}">{{$item->title}}</a>
                                     </td>
-                                    <td @if(in_array($item->parent_id,[0,1]))style="color: grey" @endif>{{$item->parent_id}}</td>
+                                    <td @if(in_array($item->parent_id,[0,1]))style="color: grey" @endif>{{$item->parentTitle}}</td>
                                 </tr>
                             @endforeach
                             </tbody>
