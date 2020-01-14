@@ -18,6 +18,14 @@ class BlogPostObserver
         //
     }
 
+    public function creating(BlogPost $blogPost)
+    {
+        $this->setPublishedAt($blogPost);
+        $this->setSlug($blogPost);
+        $this->setHtml($blogPost);
+        $this->setUserId($blogPost);
+    }
+
     /**
      * Handle the blog post "updated" event.
      *
@@ -26,7 +34,6 @@ class BlogPostObserver
      */
     public function updated(BlogPost $blogPost)
     {
-        return false;
         //
     }
 
@@ -38,10 +45,9 @@ class BlogPostObserver
      */
     public function updating(BlogPost $blogPost)
     {
-        dd($blogPost);
         $this->setPublishedAt($blogPost);
         $this->setSlug($blogPost);
-        return false;
+
     }
 
     /**
@@ -62,6 +68,24 @@ class BlogPostObserver
         if (empty($blogPost->slug)) {
             $blogPost->slug = str_slug($blogPost->title);
         }
+    }
+
+    /**
+     * @param BlogPost $blogPost
+     */
+    private function setHtml(BlogPost $blogPost)
+    {
+        if ($blogPost->isDirty('content_raw')){
+            $blogPost->content_html = $blogPost->content_raw;
+        }
+    }
+
+    /**
+     * @param BlogPost $blogPost
+     */
+    private function setUserId(BlogPost $blogPost)
+    {
+        $blogPost->user_id = auth()->id ?? BlogPost::UNKNOWN_USER;
     }
 
     /**

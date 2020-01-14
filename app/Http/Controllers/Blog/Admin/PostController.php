@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers\Blog\Admin;
 
-use App\Http\Requests\BlogCategoryCreateRequest;
-use App\Http\Requests\BlogCategoryUpdateRequest;
+use App\Http\Requests\BlogPostCreateRequest;
 use App\Http\Requests\BlogPostUpdateRequest;
-use App\Models\BlogCategory;
 use App\Models\BlogPost;
 use App\Repositories\BlogCategoryRepository;
 use App\Repositories\BlogPostRepository;
-use Carbon\Carbon;
 
 class PostController extends BaseAdminBlogController
 {
@@ -47,7 +44,7 @@ class PostController extends BaseAdminBlogController
     {
         $item = new BlogPost();
         $categoryList = $this->blogCategoryRepository->getListForComboBox();
-        return view('blog.admin.categories.edit', compact('item', 'categoryList'));
+        return view('blog.admin.posts.edit', compact('item', 'categoryList'));
     }
 
     /**
@@ -56,16 +53,15 @@ class PostController extends BaseAdminBlogController
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(BlogCategoryCreateRequest $request)
+    public function store(BlogPostCreateRequest $request)
     {
         $data = $request->input();
         if (empty($data['slug'])) {
             $data['slug'] = str_slug($data['title']);
         }
-        $item = new BlogCategory($data);
-        $item->save();
+        $item = BlogPost::create($data);
         if ($item) {
-            return redirect()->route('blog.admin.categories.edit', $item->id)->with(['success' => "Успешно сохранено"]);
+            return redirect()->route('blog.admin.posts.edit', $item->id)->with(['success' => "Успешно сохранено"]);
         } else {
             return back()->withErrors(['msg' => "Ошибка сохранения"])->withInput();
         }

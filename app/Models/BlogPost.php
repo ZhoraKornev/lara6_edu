@@ -43,7 +43,8 @@ class BlogPost extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = ['title','category_id','user_id','is_published','slug','excerpt','published_at'];
+    protected $fillable = ['title','category_id','user_id','is_published','slug','excerpt','published_at','content_raw'];
+    const UNKNOWN_USER = 1;
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
