@@ -37,7 +37,7 @@ class CategoryController extends BaseAdminBlogController
      */
     public function create()
     {
-        $item = new BlogCategory();
+        $item = BlogCategory::make();
         $categoryList = $this->blogCategoryRepository->getListForComboBox();
         return view('blog.admin.categories.edit', compact('item', 'categoryList'));
     }
@@ -54,7 +54,7 @@ class CategoryController extends BaseAdminBlogController
         if (empty($data['slug'])) {
             $data['slug'] = str_slug($data['title']);
         }
-        $item = BlogCategory::make($data);
+        $item = BlogCategory::create($data);
         if ($item) {
             return redirect()->route('blog.admin.categories.edit', $item->id)->with(['success' => "Успешно сохранено"]);
         } else {
