@@ -27,4 +27,5 @@ Route::group($groupData, function () {
 });
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/jobs', 'HomeController@jobs')->name('jobs');
 //Route::resource('rest','RestTestController')->names('restTest');
